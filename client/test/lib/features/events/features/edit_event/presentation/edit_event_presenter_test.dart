@@ -152,6 +152,33 @@ void main() {
     verify(mockView.updateView()).called(1);
   });
 
+  test('updateDembraneProjectId trims project id and forces alwaysRecord', () {
+    when(mockEditEventPresenterHelper.wereChangesMade(model)).thenReturn(true);
+    final event = getEvent().copyWith(
+      eventSettings: EventSettings.defaultSettings,
+    );
+    model.event = event;
+
+    presenter.updateDembraneProjectId('  project-123  ');
+
+    expect(model.event.dembraneProjectId, 'project-123');
+    expect(model.event.eventSettings?.alwaysRecord, isTrue);
+    verify(mockAppDrawerProvider.setUnsavedChanges(true)).called(1);
+    verify(mockView.updateView()).called(1);
+  });
+
+  test('updateDembraneProjectId clears project id when emptied', () {
+    when(mockEditEventPresenterHelper.wereChangesMade(model)).thenReturn(true);
+    final event = getEvent().copyWith(dembraneProjectId: 'project-123');
+    model.event = event;
+
+    presenter.updateDembraneProjectId('   ');
+
+    expect(model.event.dembraneProjectId, isNull);
+    verify(mockAppDrawerProvider.setUnsavedChanges(true)).called(1);
+    verify(mockView.updateView()).called(1);
+  });
+
   test('updateIsPublic', () {
     when(mockEditEventPresenterHelper.wereChangesMade(model)).thenReturn(true);
     final event = getEvent();

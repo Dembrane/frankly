@@ -108,6 +108,7 @@ class CreateEventDialogModel with ChangeNotifier {
         title: eventTemplate?.title,
         description: eventTemplate?.description,
         image: eventTemplate?.image,
+        dembraneProjectId: eventTemplate?.dembraneProjectId,
         minParticipants: eventTemplate?.minParticipants,
         maxParticipants: eventTemplate?.maxParticipants,
         agendaItems: eventTemplate?.agendaItems ?? [],
@@ -119,6 +120,11 @@ class CreateEventDialogModel with ChangeNotifier {
         eventSettings:
             _selectedTemplate?.eventSettings ?? communityProvider.eventSettings,
       );
+      if (_event.hasDembraneProjectLink) {
+        _event = _event.copyWith(
+          eventSettings: _resolvedEventSettingsForSubmission(),
+        );
+      }
     }
   }
 
@@ -144,6 +150,22 @@ class CreateEventDialogModel with ChangeNotifier {
 
   void updateVisibility({required bool isPublic}) {
     _event = _event.copyWith(isPublic: isPublic);
+    notifyListeners();
+  }
+
+  void updateDembraneProjectId(String? value) {
+    final trimmedValue = value?.trim();
+    final dembraneProjectId =
+        trimmedValue == null || trimmedValue.isEmpty ? null : trimmedValue;
+    var updatedEvent = _event.copyWith(dembraneProjectId: dembraneProjectId);
+    if (dembraneProjectId != null) {
+      updatedEvent = updatedEvent.copyWith(
+        eventSettings: _resolvedEventSettings(updatedEvent).copyWith(
+          alwaysRecord: true,
+        ),
+      );
+    }
+    _event = updatedEvent;
     notifyListeners();
   }
 
@@ -214,8 +236,7 @@ class CreateEventDialogModel with ChangeNotifier {
           _event.postEventCardData ?? selectedTemplate?.postEventCardData,
       prerequisiteTemplateId: _event.prerequisiteTemplateId ??
           selectedTemplate?.prerequisiteTemplateId,
-      eventSettings:
-          _selectedTemplate?.eventSettings ?? communityProvider.eventSettings,
+      eventSettings: _resolvedEventSettingsForSubmission(),
     );
 
     PrivateLiveStreamInfo? privateLiveStreamInfo;
@@ -291,6 +312,15 @@ class CreateEventDialogModel with ChangeNotifier {
       }
     }
 
+    if (_event.hasDembraneProjectLink &&
+        _event.eventSettings?.alwaysRecord != true) {
+      _event = _event.copyWith(
+        eventSettings: _resolvedEventSettings(_event).copyWith(
+          alwaysRecord: true,
+        ),
+      );
+    }
+
     await firestoreEventService.updateEvent(
       event: _event,
       keys: [
@@ -301,6 +331,8 @@ class CreateEventDialogModel with ChangeNotifier {
         Event.kFieldMinParticipants,
         Event.kFieldMaxParticipants,
         Event.kFieldLiveStreamInfo,
+        Event.kFieldDembraneProjectId,
+        Event.kFieldEventSettings,
       ],
     );
 
@@ -330,5 +362,19 @@ class CreateEventDialogModel with ChangeNotifier {
       streamServerUrl: liveStreamResponse.streamServerUrl,
       streamKey: liveStreamResponse.streamKey,
     );
+  }
+
+  EventSettings _resolvedEventSettingsForSubmission() {
+    final eventSettings = _resolvedEventSettings(_event);
+    if (_event.hasDembraneProjectLink) {
+      return eventSettings.copyWith(alwaysRecord: true);
+    }
+    return eventSettings;
+  }
+
+  EventSettings _resolvedEventSettings(Event event) {
+    return event.eventSettings ??
+        _selectedTemplate?.eventSettings ??
+        communityProvider.eventSettings;
   }
 }

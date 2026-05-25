@@ -37,6 +37,10 @@
     "storage_access_key": "<value>",
     "storage_bucket_name": "<value>"
   },
+  "dembrane": {
+    "bridge_url": "https://frankly-dembrane-bridge.example.com",
+    "bridge_token": "<value>"
+  },
   "ics": {
     "prod_id": "Frankly"
   },

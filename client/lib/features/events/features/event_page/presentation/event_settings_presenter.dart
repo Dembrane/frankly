@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:client/core/utils/toast_utils.dart';
 import 'package:client/features/events/features/event_page/data/providers/event_provider.dart';
 import 'package:client/features/events/features/event_page/presentation/views/event_settings_drawer.dart';
 import 'package:client/features/events/features/event_page/data/providers/template_provider.dart';
@@ -107,6 +108,18 @@ class EventSettingsPresenter {
   }
 
   void updateSetting(String setting, bool isSelected) async {
+    if (_model.eventSettingsDrawerType == EventSettingsDrawerType.event &&
+        setting == EventSettings.kFieldAlwaysRecord &&
+        !isSelected &&
+        _eventProvider.event.hasDembraneProjectLink) {
+      final l10n = appLocalizationService.getLocalization();
+      _view.showMessage(
+        l10n.dembraneRecordingMustStayOn,
+        toastType: ToastType.failed,
+      );
+      return;
+    }
+
     final settings = EventSettings.fromJson(
       _model.eventSettings.toJson()
         ..addEntries([

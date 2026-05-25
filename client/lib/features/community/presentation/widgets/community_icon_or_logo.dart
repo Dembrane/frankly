@@ -9,6 +9,7 @@ import 'package:client/services.dart';
 import 'package:client/styles/app_asset.dart';
 import 'package:data_models/community/community.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// This widget either shows the app icon or a logo of the selected community, if one is selected.
 class CurrentCommunityIconOrLogo extends StatelessWidget {
@@ -67,6 +68,7 @@ class CurrentCommunityIconOrLogo extends StatelessWidget {
       child: SizedBox(
         height: isMobile ? 40 : 80,
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             // App logo
             Semantics(
@@ -75,6 +77,16 @@ class CurrentCommunityIconOrLogo extends StatelessWidget {
                 AppAsset.kLogoPng.path,
                 width: 100,
                 height: isMobile ? 40 : 80,
+                fit: BoxFit.contain,
+              ),
+            ),
+            SizedBox(width: 10),
+            Semantics(
+              label: 'Dembrane logo',
+              child: SvgPicture.asset(
+                AppAsset.kDembraneLogoSvg.path,
+                width: isMobile ? 88 : 138,
+                height: isMobile ? 18 : 28,
                 fit: BoxFit.contain,
               ),
             ),
