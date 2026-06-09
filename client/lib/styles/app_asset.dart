@@ -70,6 +70,8 @@ class AppAsset {
   static const AppAsset kLogoIconPng = AppAsset('media/logo-icon.png');
   static const AppAsset kLogoPng = AppAsset('media/logo.png');
   static const AppAsset kLogoSvg = AppAsset('media/logo.svg');
+  static const AppAsset kDembraneLogoSvg =
+      AppAsset('media/dembrane-logo-new.svg');
 
   static const AppAsset kSpokenCheckMark =
       AppAsset('media/spoken_check_mark.png');

@@ -281,6 +281,8 @@ class AssignToBreakouts {
     }
     profile('total matches: ${prematches.length + matches.length}');
 
+    final alwaysRecord = (event.eventSettings?.alwaysRecord ?? false) ||
+        event.hasDembraneProjectLink;
     final breakoutMatchIdsToRecord = event.breakoutMatchIdsToRecord.toSet();
     final prematchEntries = prematches.entries.toList();
 
@@ -295,7 +297,7 @@ class AssignToBreakouts {
           participantIds: prematchEntries[i].value.map((p) => p.id).toList(),
           originalParticipantIdsAssignment:
               prematchEntries[i].value.map((p) => p.id).toList(),
-          record: (event.eventSettings?.alwaysRecord ?? false) ||
+          record: alwaysRecord ||
               breakoutMatchIdsToRecord.contains(prematchEntries[i].key),
         ),
       for (var j = 0; j < matches.length; j++)
@@ -306,7 +308,7 @@ class AssignToBreakouts {
           orderingPriority: j + i,
           participantIds: matches[j],
           originalParticipantIdsAssignment: matches[j],
-          record: event.eventSettings?.alwaysRecord ?? false,
+          record: alwaysRecord,
         ),
     ];
   }
@@ -577,7 +579,8 @@ class AssignToBreakouts {
         breakoutRoomsSessionDoc.collection('breakout-rooms');
 
     List<BreakoutRoom> breakoutRooms;
-    final alwaysRecord = event.eventSettings?.alwaysRecord ?? false;
+    final alwaysRecord = (event.eventSettings?.alwaysRecord ?? false) ||
+        event.hasDembraneProjectLink;
 
     if (assignmentMethod == BreakoutAssignmentMethod.targetPerRoom) {
       breakoutRooms = await _assignBreakoutsBasedOnTargetSize(
@@ -689,7 +692,8 @@ class AssignToBreakouts {
           .map((r) => r.roomId)
           .toList();
       print(
-          'breakout_recording_start: eventId=${event.id} breakoutSessionId=$breakoutSessionId roomIds=$recordingRoomIds',);
+        'breakout_recording_start: eventId=${event.id} breakoutSessionId=$breakoutSessionId roomIds=$recordingRoomIds',
+      );
       for (final room in breakoutRooms) {
         if (room.roomId == breakoutsWaitingRoomId) continue;
         final newSessionId = firestore
@@ -699,7 +703,8 @@ class AssignToBreakouts {
         final roomPath = '${breakoutRoomsCollection.path}/${room.roomId}';
         await firestore.document(roomPath).updateData(
               UpdateData.fromMap(
-                  {BreakoutRoom.kFieldRecordingSessionId: newSessionId},),
+                {BreakoutRoom.kFieldRecordingSessionId: newSessionId},
+              ),
             );
         try {
           await agoraUtils.recordRoom(
@@ -708,13 +713,15 @@ class AssignToBreakouts {
             eventId: event.id,
             communityId: event.communityId,
             roomType: RecordingRoomType.breakout,
+            dembraneProjectId: event.dembraneProjectId,
             breakoutSessionId: breakoutSessionId,
             chatPath: '$roomPath/chats/community_chat/messages',
             participantIds: room.participantIds,
           );
         } catch (e) {
           print(
-              'Error starting recording for breakout room ${room.roomId}: $e',);
+            'Error starting recording for breakout room ${room.roomId}: $e',
+          );
         }
       }
     }

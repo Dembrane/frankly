@@ -170,16 +170,21 @@ class EventPageState extends State<EventPage> implements EventPageView {
             return false;
           }
 
-          // If the event is always recorded, show a consent dialog before joining
-          if(!mounted) return false;
-          if (context.read<EventProvider>().event.eventSettings?.alwaysRecord ==
-              true) {
+          // If the event is recorded, show a consent dialog before joining.
+          if (!mounted) return false;
+          final isDembraneLinked = event.hasDembraneProjectLink;
+          final requiresRecordingConsent = isDembraneLinked ||
+              context.read<EventProvider>().event.eventSettings?.alwaysRecord ==
+                  true;
+          if (requiresRecordingConsent) {
             final proceed = await showDialog<bool>(
               context: context,
               builder: (context) => AlertDialog(
                 title: Text(context.l10n.thisEventIsBeingRecorded),
                 content: Text(
-                  context.l10n.hostWillReceiveDownloadableCopy,
+                  isDembraneLinked
+                      ? context.l10n.dembraneJoinConsentMessage
+                      : context.l10n.hostWillReceiveDownloadableCopy,
                 ),
                 actions: [
                   TextButton(

@@ -88,11 +88,12 @@ class GetBreakoutRoomJoinInfo
     final joinInfo = await liveMeetingUtils.getBreakoutRoomJoinInfo(
       communityId: event.communityId,
       eventId: request.eventId,
-      breakoutSessionId: currentBreakoutSession.breakoutRoomSessionId ?? '',
+      breakoutSessionId: currentBreakoutSession.breakoutRoomSessionId,
       breakoutRoomPath: breakoutRoomPath,
       meetingId: breakoutRoom.roomId,
       userId: context.authUid!,
       record: breakoutRoom.record,
+      dembraneProjectId: event.dembraneProjectId,
       existingRecordingSessionId: breakoutRoom.recordingSessionId,
       participantIds: breakoutRoom.participantIds,
     );

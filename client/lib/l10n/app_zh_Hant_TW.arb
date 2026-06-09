@@ -1004,5 +1004,17 @@
   "yourChangesToProfileCantBeSaved": "無法保存您對個人資料所做的更改。",
   "yourName": "您的名字",
   "youtubeVideoLookupFailed": "抱歉，YouTube影片查詢失敗。",
+  "dembraneJoinConsentMessage": "The host will receive a downloadable recording, and an anonymous recording of the session will be sent to Dembrane.",
+  "dembraneLinkedProjectId": "Linked project ID",
+  "dembraneName": "Dembrane",
+  "dembraneParticipantDisclaimer": "If you participate in this event, an anonymous recording of the session will be sent to Dembrane.",
+  "dembraneProjectIdLabel": "Dembrane project ID",
+  "dembraneProjectRecordingHint": "Linked events keep recording enabled so an anonymous recording of the session can be sent to Dembrane.",
+  "dembraneProjectSectionDescription": "Link an Echo project to send an anonymous recording of this event to Dembrane.",
+  "dembraneProjectUrlHint": "Paste the Echo project ID from the project URL. This is the value after `/projects/`.",
+  "dembraneRecordingMustStayOn": "Dembrane-linked events must stay recorded. Unlink the Dembrane project first if you want to turn recording off.",
+  "linkToDembraneProject": "Link to Dembrane Project",
+  "unlink": "Unlink",
+  "updateDembraneProjectLink": "Update Dembrane Project Link",
   "zoom": "縮放"
 }

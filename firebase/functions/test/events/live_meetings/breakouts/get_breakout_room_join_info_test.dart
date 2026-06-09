@@ -1,5 +1,6 @@
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
 import 'package:get_it/get_it.dart';
+import 'package:data_models/recording/recording_session.dart';
 import 'package:functions/events/live_meetings/breakouts/get_breakout_room_join_info.dart';
 import 'package:functions/events/live_meetings/live_meeting_utils.dart';
 
@@ -26,6 +27,10 @@ void main() {
   final communityUtils = CommunityTestUtils();
   final liveMeetingUtils = LiveMeetingTestUtils();
   setupTestFixture();
+
+  setUpAll(() {
+    registerFallbackValue(<String>[]);
+  });
 
   setUp(() async {
     communityId = await communityUtils.createTestCommunity();
@@ -130,5 +135,116 @@ void main() {
       'meetingId': breakoutRoom.roomId,
     };
     expect(result, equals(expectedResult));
+  });
+
+  test('Dembrane-linked breakout room records with the linked project id',
+      () async {
+    var event = Event(
+      id: '9622',
+      status: EventStatus.active,
+      communityId: communityId,
+      templateId: templateId,
+      creatorId: adminUserId,
+      nullableEventType: EventType.hosted,
+      collectionPath: '',
+      dembraneProjectId: 'project-123',
+      agendaItems: [
+        AgendaItem(
+          id: '555',
+          title: 'Role call',
+          content: "Shout out if you're here",
+        ),
+      ],
+    );
+    event = await eventUtils.createEvent(
+      event: event,
+      userId: adminUserId,
+    );
+
+    await eventUtils.joinEventMultiple(
+      communityId: communityId,
+      templateId: templateId,
+      eventId: event.id,
+      participantIds: ['333', '444', '555', '666'],
+      breakoutSessionId: breakoutSessionId,
+    );
+
+    for (final participantId in ['333', '444', '555', '666']) {
+      await communityUtils.addCommunityMember(
+        userId: participantId,
+        communityId: communityId,
+      );
+    }
+
+    await liveMeetingUtils.addMeetingEvent(
+      liveMeetingPath: liveMeetingUtils.getLiveMeetingPath(event),
+      meetingEvent: LiveMeetingEvent(
+        agendaItem: event.agendaItems.first.id,
+        event: LiveMeetingEventType.agendaItemStarted,
+      ),
+    );
+
+    await liveMeetingUtils.initiateBreakoutSession(
+      event: event,
+      breakoutSessionId: breakoutSessionId,
+      userId: adminUserId,
+    );
+
+    final breakoutRoom = await liveMeetingUtils.getBreakoutRoom(
+      event: event,
+      breakoutSessionId: breakoutSessionId,
+      roomName: '1',
+    );
+    expect(breakoutRoom.record, isTrue);
+
+    final agoraUtils = MockAgoraUtils();
+    when(
+      () => agoraUtils.createToken(
+        uid: liveMeetingUtils.uidToInt('333'),
+        roomId: breakoutRoom.roomId,
+      ),
+    ).thenReturn('fakeToken');
+    when(
+      () => agoraUtils.recordRoom(
+        roomId: breakoutRoom.roomId,
+        sessionId: any(named: 'sessionId'),
+        eventId: event.id,
+        communityId: communityId,
+        roomType: RecordingRoomType.breakout,
+        dembraneProjectId: 'project-123',
+        breakoutSessionId: breakoutSessionId,
+        chatPath: any(named: 'chatPath'),
+        participantIds: any(named: 'participantIds'),
+      ),
+    ).thenAnswer((_) async {});
+
+    final roomInfo = GetBreakoutRoomJoinInfo(
+      liveMeetingUtils: LiveMeetingUtils(agoraUtils: agoraUtils),
+    );
+
+    await roomInfo.action(
+      GetBreakoutRoomJoinInfoRequest(
+        eventId: event.id,
+        eventPath: event.fullPath,
+        breakoutRoomId: breakoutRoom.roomId,
+        enableAudio: false,
+        enableVideo: false,
+      ),
+      CallableContext('333', null, 'fakeInstanceId'),
+    );
+
+    verify(
+      () => agoraUtils.recordRoom(
+        roomId: breakoutRoom.roomId,
+        sessionId: any(named: 'sessionId'),
+        eventId: event.id,
+        communityId: communityId,
+        roomType: RecordingRoomType.breakout,
+        dembraneProjectId: 'project-123',
+        breakoutSessionId: breakoutSessionId,
+        chatPath: any(named: 'chatPath'),
+        participantIds: any(named: 'participantIds'),
+      ),
+    ).called(1);
   });
 }

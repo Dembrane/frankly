@@ -34,6 +34,7 @@ mixin _$RecordingSession {
   @JsonKey(fromJson: dateTimeFromTimestamp, toJson: serverTimestampOrNull)
   DateTime? get stoppedAt => throw _privateConstructorUsedError;
   String? get breakoutSessionId => throw _privateConstructorUsedError;
+  String? get dembraneProjectId => throw _privateConstructorUsedError;
   String? get agoraResourceId => throw _privateConstructorUsedError;
   String? get agoraSid => throw _privateConstructorUsedError;
   String? get agoraRttTaskId => throw _privateConstructorUsedError;
@@ -70,6 +71,7 @@ abstract class $RecordingSessionCopyWith<$Res> {
       @JsonKey(fromJson: dateTimeFromTimestamp, toJson: serverTimestampOrNull)
       DateTime? stoppedAt,
       String? breakoutSessionId,
+      String? dembraneProjectId,
       String? agoraResourceId,
       String? agoraSid,
       String? agoraRttTaskId,
@@ -103,6 +105,7 @@ class _$RecordingSessionCopyWithImpl<$Res, $Val extends RecordingSession>
     Object? startedAt = freezed,
     Object? stoppedAt = freezed,
     Object? breakoutSessionId = freezed,
+    Object? dembraneProjectId = freezed,
     Object? agoraResourceId = freezed,
     Object? agoraSid = freezed,
     Object? agoraRttTaskId = freezed,
@@ -152,6 +155,10 @@ class _$RecordingSessionCopyWithImpl<$Res, $Val extends RecordingSession>
       breakoutSessionId: freezed == breakoutSessionId
           ? _value.breakoutSessionId
           : breakoutSessionId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      dembraneProjectId: freezed == dembraneProjectId
+          ? _value.dembraneProjectId
+          : dembraneProjectId // ignore: cast_nullable_to_non_nullable
               as String?,
       agoraResourceId: freezed == agoraResourceId
           ? _value.agoraResourceId
@@ -212,6 +219,7 @@ abstract class _$$_RecordingSessionCopyWith<$Res>
       @JsonKey(fromJson: dateTimeFromTimestamp, toJson: serverTimestampOrNull)
       DateTime? stoppedAt,
       String? breakoutSessionId,
+      String? dembraneProjectId,
       String? agoraResourceId,
       String? agoraSid,
       String? agoraRttTaskId,
@@ -243,6 +251,7 @@ class __$$_RecordingSessionCopyWithImpl<$Res>
     Object? startedAt = freezed,
     Object? stoppedAt = freezed,
     Object? breakoutSessionId = freezed,
+    Object? dembraneProjectId = freezed,
     Object? agoraResourceId = freezed,
     Object? agoraSid = freezed,
     Object? agoraRttTaskId = freezed,
@@ -292,6 +301,10 @@ class __$$_RecordingSessionCopyWithImpl<$Res>
       breakoutSessionId: freezed == breakoutSessionId
           ? _value.breakoutSessionId
           : breakoutSessionId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      dembraneProjectId: freezed == dembraneProjectId
+          ? _value.dembraneProjectId
+          : dembraneProjectId // ignore: cast_nullable_to_non_nullable
               as String?,
       agoraResourceId: freezed == agoraResourceId
           ? _value.agoraResourceId
@@ -346,6 +359,7 @@ class _$_RecordingSession implements _RecordingSession {
       @JsonKey(fromJson: dateTimeFromTimestamp, toJson: serverTimestampOrNull)
       this.stoppedAt,
       this.breakoutSessionId,
+      this.dembraneProjectId,
       this.agoraResourceId,
       this.agoraSid,
       this.agoraRttTaskId,
@@ -384,6 +398,8 @@ class _$_RecordingSession implements _RecordingSession {
   @override
   final String? breakoutSessionId;
   @override
+  final String? dembraneProjectId;
+  @override
   final String? agoraResourceId;
   @override
   final String? agoraSid;
@@ -404,7 +420,7 @@ class _$_RecordingSession implements _RecordingSession {
 
   @override
   String toString() {
-    return 'RecordingSession(sessionId: $sessionId, communityId: $communityId, eventId: $eventId, roomId: $roomId, roomType: $roomType, status: $status, startedBy: $startedBy, startedAt: $startedAt, stoppedAt: $stoppedAt, breakoutSessionId: $breakoutSessionId, agoraResourceId: $agoraResourceId, agoraSid: $agoraSid, agoraRttTaskId: $agoraRttTaskId, gcsPrefix: $gcsPrefix, chatPath: $chatPath, errorMessage: $errorMessage, artifactPaths: $artifactPaths, participantIds: $participantIds)';
+    return 'RecordingSession(sessionId: $sessionId, communityId: $communityId, eventId: $eventId, roomId: $roomId, roomType: $roomType, status: $status, startedBy: $startedBy, startedAt: $startedAt, stoppedAt: $stoppedAt, breakoutSessionId: $breakoutSessionId, dembraneProjectId: $dembraneProjectId, agoraResourceId: $agoraResourceId, agoraSid: $agoraSid, agoraRttTaskId: $agoraRttTaskId, gcsPrefix: $gcsPrefix, chatPath: $chatPath, errorMessage: $errorMessage, artifactPaths: $artifactPaths, participantIds: $participantIds)';
   }
 
   @override
@@ -429,6 +445,8 @@ class _$_RecordingSession implements _RecordingSession {
                 other.stoppedAt == stoppedAt) &&
             (identical(other.breakoutSessionId, breakoutSessionId) ||
                 other.breakoutSessionId == breakoutSessionId) &&
+            (identical(other.dembraneProjectId, dembraneProjectId) ||
+                other.dembraneProjectId == dembraneProjectId) &&
             (identical(other.agoraResourceId, agoraResourceId) ||
                 other.agoraResourceId == agoraResourceId) &&
             (identical(other.agoraSid, agoraSid) ||
@@ -449,26 +467,28 @@ class _$_RecordingSession implements _RecordingSession {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      sessionId,
-      communityId,
-      eventId,
-      roomId,
-      roomType,
-      status,
-      startedBy,
-      startedAt,
-      stoppedAt,
-      breakoutSessionId,
-      agoraResourceId,
-      agoraSid,
-      agoraRttTaskId,
-      gcsPrefix,
-      chatPath,
-      errorMessage,
-      const DeepCollectionEquality().hash(artifactPaths),
-      const DeepCollectionEquality().hash(participantIds));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        sessionId,
+        communityId,
+        eventId,
+        roomId,
+        roomType,
+        status,
+        startedBy,
+        startedAt,
+        stoppedAt,
+        breakoutSessionId,
+        dembraneProjectId,
+        agoraResourceId,
+        agoraSid,
+        agoraRttTaskId,
+        gcsPrefix,
+        chatPath,
+        errorMessage,
+        const DeepCollectionEquality().hash(artifactPaths),
+        const DeepCollectionEquality().hash(participantIds)
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -500,6 +520,7 @@ abstract class _RecordingSession implements RecordingSession {
       @JsonKey(fromJson: dateTimeFromTimestamp, toJson: serverTimestampOrNull)
       final DateTime? stoppedAt,
       final String? breakoutSessionId,
+      final String? dembraneProjectId,
       final String? agoraResourceId,
       final String? agoraSid,
       final String? agoraRttTaskId,
@@ -536,6 +557,8 @@ abstract class _RecordingSession implements RecordingSession {
   DateTime? get stoppedAt;
   @override
   String? get breakoutSessionId;
+  @override
+  String? get dembraneProjectId;
   @override
   String? get agoraResourceId;
   @override

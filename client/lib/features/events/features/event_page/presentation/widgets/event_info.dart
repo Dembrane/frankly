@@ -2,7 +2,6 @@ import 'package:client/core/utils/date_utils.dart';
 import 'package:client/core/utils/template_utils.dart';
 import 'package:client/core/utils/navigation_utils.dart';
 import 'package:client/core/utils/toast_utils.dart';
-import 'package:data_models/user_input/chat_suggestion_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +85,7 @@ class EventInfo extends StatefulHookWidget {
   }) onJoinEvent;
 
   @override
-  _EventInfoState createState() => _EventInfoState();
+  State<EventInfo> createState() => _EventInfoState();
 }
 
 class _EventInfoState extends State<EventInfo> {
@@ -509,6 +508,41 @@ class _EventInfoState extends State<EventInfo> {
     }
   }
 
+  Widget _buildDembraneDisclaimer() {
+    if (!_event.hasDembraneProjectLink ||
+        _event.status == EventStatus.canceled) {
+      return SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.theme.colorScheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: context.theme.colorScheme.outlineVariant,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 20,
+            color: context.theme.colorScheme.primary,
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              context.l10n.dembraneParticipantDisclaimer,
+              style: context.theme.textTheme.bodyMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildAddToCalendar() {
     final event = context.read<EventProvider>().event;
 
@@ -852,6 +886,8 @@ class _EventInfoState extends State<EventInfo> {
                   ),
                 ),
                 SizedBox(height: 10),
+                _buildDembraneDisclaimer(),
+                if (_event.hasDembraneProjectLink) SizedBox(height: 10),
                 _buildJoinEventButton(),
                 SizedBox(height: 10),
                 Row(
@@ -891,8 +927,8 @@ class _EventInfoState extends State<EventInfo> {
   }
 
   Widget _buildEventTypeName() {
-    final String? type;
-    final AppAsset? appAsset;
+    String? type;
+    AppAsset? appAsset;
     switch (_eventProvider.event.eventType) {
       case EventType.hosted:
         type = null;
