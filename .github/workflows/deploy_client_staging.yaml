@@ -113,7 +113,9 @@ jobs:
 
       - name: Build the Flutter App
         if: steps.changes.outputs.client == 'true' || github.event_name== 'workflow_dispatch'
-        run: flutter build web --release --source-maps --web-renderer html -t lib/main.dart --dart-define-from-file=${{ github.workspace }}/.env
+        run: |
+          node "${{ github.workspace }}/scripts/validate-client-config.mjs" "${{ github.workspace }}/.env"
+          flutter build web --release --source-maps --web-renderer html -t lib/main.dart --dart-define-from-file=${{ github.workspace }}/.env
 
       - name: Render Firebase hosting config
         if: steps.changes.outputs.client == 'true' || github.event_name== 'workflow_dispatch'

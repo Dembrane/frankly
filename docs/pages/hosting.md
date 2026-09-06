@@ -520,6 +520,7 @@ From `client/`:
 
 ```bash
 flutter pub get
+node ../scripts/validate-client-config.mjs .env
 flutter build web --release --source-maps --web-renderer html -t lib/main.dart --dart-define-from-file=.env
 ```
 
@@ -676,6 +677,7 @@ gcloud config set project YOUR-FIREBASE-PROJECT-ID
 gcloud tasks queues create scheduled-functions
 
 # Build the Flutter client (from client/)
+node ../scripts/validate-client-config.mjs .env
 flutter build web --release --source-maps --web-renderer html -t lib/main.dart --dart-define-from-file=.env
 
 # Deploy hosting

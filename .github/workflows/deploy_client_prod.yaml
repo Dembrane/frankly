@@ -79,7 +79,9 @@ jobs:
           envkey_SUPPORT_EMAIL: ${{ secrets.SUPPORT_EMAIL }}
 
       - name: Build the Flutter App
-        run: flutter build web --release --source-maps --web-renderer html -t lib/main.dart --dart-define-from-file=${{ github.workspace }}/.env
+        run: |
+          node "${{ github.workspace }}/scripts/validate-client-config.mjs" "${{ github.workspace }}/.env"
+          flutter build web --release --source-maps --web-renderer html -t lib/main.dart --dart-define-from-file=${{ github.workspace }}/.env
 
       - name: Render Firebase hosting config
         working-directory: ${{ github.workspace }}
