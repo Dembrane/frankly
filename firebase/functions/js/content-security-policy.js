@@ -37,11 +37,11 @@ function buildCsp(nonce, { cloudinary = true } = {}) {
             ` https://player.vimeo.com https://api.segment.io` +
             ` https://api.linkpreview.net https://*.stripe.com` +
             ` https://frankly.org https://fonts.gstatic.com https://www.gstatic.com`,
-        `img-src 'self' data: blob:` +
+        `img-src 'self' data: blob: https://firebasestorage.googleapis.com` +
             cloudinaryMediaHost +
             ` https://*.googleusercontent.com` +
             ` https://picsum.photos https://fastly.picsum.photos`,
-        `media-src 'self' blob:${cloudinaryMediaHost} https://*.mux.com`,
+        `media-src 'self' blob: https://firebasestorage.googleapis.com${cloudinaryMediaHost} https://*.mux.com`,
         `frame-src 'self'` +
             ` https://player.vimeo.com https://*.stripe.com https://*.firebaseapp.com`,
         `worker-src 'self' blob:`,

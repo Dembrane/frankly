@@ -17,7 +17,18 @@ test('allows Cloudinary by default', () => {
 test('omits every Cloudinary host when disabled', () => {
     const csp = buildCsp('abc', { cloudinary: false })
     assert.doesNotMatch(csp, /cloudinary/)
-    assert.match(csp, /media-src 'self' blob: https:\/\/\*\.mux\.com/)
+    assert.match(
+        csp,
+        /media-src 'self' blob: https:\/\/firebasestorage\.googleapis\.com https:\/\/\*\.mux\.com/,
+    )
+})
+
+test('allows Firebase Storage media either way', () => {
+    for (const cloudinary of [true, false]) {
+        const csp = buildCsp('abc', { cloudinary })
+        assert.match(csp, /img-src[^;]*https:\/\/firebasestorage\.googleapis\.com/)
+        assert.match(csp, /media-src[^;]*https:\/\/firebasestorage\.googleapis\.com/)
+    }
 })
 
 test('reads app.cloudinary_enabled from runtime config', () => {

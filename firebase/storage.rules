@@ -1,0 +1,25 @@
+rules_version = '2';
+
+// Media that signed-in users upload when MEDIA_UPLOAD_PROVIDER=firebase.
+// Files are shared through download URLs (which carry their own access
+// token), so reads through the SDK are limited to the uploader.
+// Size limits match FirebaseStorageMediaUploader in the client.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /media/{userId}/{fileName} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      // New files only: an uploaded file is never replaced behind its URL.
+      allow create: if resource == null
+        && request.auth != null
+        && request.auth.uid == userId
+        && request.auth.token.firebase.sign_in_provider != 'anonymous'
+        && (
+          (request.resource.contentType.matches('image/(jpeg|png|gif|webp)')
+            && request.resource.size <= 10 * 1024 * 1024)
+          || (request.resource.contentType.matches('video/(mp4|webm)')
+            && request.resource.size <= 500 * 1024 * 1024)
+        );
+    }
+  }
+}
