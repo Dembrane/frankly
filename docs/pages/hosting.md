@@ -394,6 +394,7 @@ agora.storage_bucket_name="<YOUR_VALUE_HERE>"
 agora.storage_access_key="<YOUR_VALUE_HERE>"
 agora.storage_secret_key="<YOUR_VALUE_HERE>"
 agora.webhook_secret="<YOUR_VALUE_HERE>"
+agora.recording_region="<OPTIONAL: EU, NA, AP or CN>"
 ```
 
 Setup summary:
