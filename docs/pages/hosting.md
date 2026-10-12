@@ -419,6 +419,14 @@ Also configure Mux webhooks in the Mux dashboard to POST to your deployed `MuxWe
 
 Cloudinary is used for media uploads. Configuration is done entirely via `client/.env` (see step 9). No source files need to be edited.
 
+To keep browsers away from Cloudinary entirely, also set
+`app.cloudinary_enabled="false"` in the Functions runtime config. `ServeIndex`
+then drops every Cloudinary host from the Content-Security-Policy, so the
+browser refuses any request to Cloudinary. Images uploaded earlier keep their
+Cloudinary URLs and stop displaying. Point `LOGO_URL` and `app.banner_image_url`
+(used in emails) at images you host yourself, because their example values,
+like the Open Graph image in `client/web/index.html`, are served from Cloudinary.
+
 ### Stripe
 
 Stripe is currently disabled by default. If you enable it, set via `firebase functions:config:set`:
