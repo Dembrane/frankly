@@ -24,6 +24,27 @@ enum AgoraRoomState {
   DISCONNECTED,
 }
 
+/// Maps the AGORA_AREA build setting to an Agora area code. Unknown values
+/// fall back to global routing.
+int agoraAreaCode(String area) {
+  switch (area.toUpperCase()) {
+    case 'EU':
+      return AreaCode.areaCodeEu.value();
+    case 'NA':
+      return AreaCode.areaCodeNa.value();
+    case 'AS':
+      return AreaCode.areaCodeAs.value();
+    case 'JP':
+      return AreaCode.areaCodeJp.value();
+    case 'IN':
+      return AreaCode.areaCodeIn.value();
+    case 'CN':
+      return AreaCode.areaCodeCn.value();
+    default:
+      return AreaCode.areaCodeGlob.value();
+  }
+}
+
 class AgoraRoom with ChangeNotifier {
   late final RtcEngine engine;
   late final RtcEngineEventHandler _rtcEngineEventHandler;
@@ -114,6 +135,7 @@ class AgoraRoom with ChangeNotifier {
     await engine.initialize(
       RtcEngineContext(
         appId: Environment.agoraAppId,
+        areaCode: agoraAreaCode(Environment.agoraArea),
       ),
     );
 
