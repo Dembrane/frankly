@@ -31,6 +31,11 @@ final _agoraStorageAccessKey =
 final _agoraStorageSecretKey =
     functions.config.get('agora.storage_secret_key') as String;
 
+/// Optional Cloud Recording region ("EU", "NA", "AP" or "CN"). When set, Agora
+/// runs the recording in that region instead of picking one itself.
+final _agoraRecordingRegion =
+    functions.config.get('agora.recording_region') as String?;
+
 class AgoraUtils {
   String createToken({required int uid, required String roomId}) {
     return agoraModule.RtcTokenBuilder.buildTokenWithUid(
@@ -209,7 +214,10 @@ class AgoraUtils {
     final body = convert.json.encode({
       'cname': roomId,
       'uid': _recordingUid.toString(),
-      'clientRequest': {},
+      'clientRequest': {
+        if (_agoraRecordingRegion != null && _agoraRecordingRegion!.isNotEmpty)
+          'region': _agoraRecordingRegion,
+      },
     });
 
     final result = await http.post(
