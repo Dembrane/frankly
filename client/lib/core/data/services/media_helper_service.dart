@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:client/config/environment.dart';
+import 'package:client/core/utils/visible_exception.dart';
 import 'package:client/services.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:universal_html/js.dart' as js;
@@ -62,6 +63,12 @@ class MediaHelperService {
     bool cropping = false,
     double? croppingAspectRatio,
   }) {
+    if (!Environment.mediaUploadsEnabled) {
+      return Future.error(
+        VisibleException('Media uploads are disabled on this instance.'),
+      );
+    }
+
     final completer = Completer<String?>();
 
     final parameters = {

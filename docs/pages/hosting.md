@@ -339,7 +339,7 @@ SHARE_LINK_URL=<value>         # URL prefix for share links, e.g. https://<app-u
 **Agora** (voice/video SDK):
 AGORA_APP_ID=<value>           # For client-side connections to Agora.
 
-**Cloudinary** (for media uploads):
+**Cloudinary** (for media uploads; optional). Leave `CLOUDINARY_CLOUD_NAME` unset to turn off all image and video uploads, including profile pictures. The upload controls are then hidden and the Cloudinary upload widget is never loaded, so no data is sent to Cloudinary from the browser:
 
 ```bash
 CLOUDINARY_IMAGE_PRESET=<value>
