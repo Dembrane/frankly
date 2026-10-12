@@ -15,6 +15,7 @@ import 'package:pedantic/pedantic.dart';
 import 'package:quiver/iterables.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:universal_html/html.dart' as html;
+import 'package:data_models/utils/generated_image.dart';
 
 enum SignInState {
   loading,
@@ -270,7 +271,7 @@ class UserService with ChangeNotifier {
       agoraId: uidToInt(currentUser.uid),
       displayName: resolvedName,
       imageUrl: isNullOrEmpty(currentUser.photoURL)
-          ? 'https://picsum.photos/seed/${currentUser.uid}/80'
+          ? generatedImageUrl(currentUser.uid)
           : currentUser.photoURL,
     );
   }

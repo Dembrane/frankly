@@ -3,11 +3,12 @@ import 'package:data_models/cloud_functions/requests.dart';
 import 'package:data_models/events/event.dart';
 import 'package:data_models/events/pre_post_card.dart';
 import 'package:data_models/utils/firestore_utils.dart';
+import 'package:data_models/utils/generated_image.dart';
 
 part 'template.freezed.dart';
 part 'template.g.dart';
 
-String defaultTemplateImage(String? id) => 'https://picsum.photos/seed/$id/300';
+String defaultTemplateImage(String? id) => generatedImageUrl('template-$id');
 
 enum TemplateStatus {
   active,

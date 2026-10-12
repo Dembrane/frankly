@@ -32,6 +32,7 @@ import 'package:data_models/community/membership.dart';
 import 'package:data_models/user/public_user_info.dart';
 import 'package:provider/provider.dart';
 import 'package:client/core/localization/localization_helper.dart';
+import 'package:data_models/utils/generated_image.dart';
 
 class ProfileTab extends StatelessWidget {
   final bool showTitle;
@@ -152,7 +153,7 @@ class _ProfileTabState extends State<_ProfileTab> {
 
     final changeRecord = controller.changeRecord;
     final initialUrl = changeRecord.imageUrl ??
-        'https://picsum.photos/seed/${userInfo.id}/$_imageSize';
+        generatedImageUrl(userInfo.id);
 
     final profileIsSelf =
         userInfo.id == Provider.of<UserService>(context).currentUserId;

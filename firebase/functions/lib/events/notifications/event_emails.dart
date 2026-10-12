@@ -16,6 +16,7 @@ import 'package:data_models/community/community.dart';
 import 'package:data_models/templates/template.dart';
 
 import 'package:timezone/standalone.dart' as tz;
+import 'package:data_models/utils/generated_image.dart';
 
 class EventEmails {
   Future<void> enqueueReminders(Event event) async {
@@ -279,13 +280,10 @@ class EventEmails {
       participantsText = 'is 1 participant';
     }
 
-    var imgUrl = community.profileImageUrl ?? '';
-    if (imgUrl.contains('picsum')) {
-      imgUrl = imgUrl.replaceAll('.webp', '.jpg');
-    }
+    final imgUrl = externalImageUrl(community.profileImageUrl);
 
     final eventTitle = event.title ?? template.title ?? '';
-    final eventImage = event.image ?? template.image;
+    final eventImage = externalImageUrl(event.image ?? template.image);
     final calendarGoogleLink = calendarLinkUtil.getGoogleLink(
       community: community,
       template: template,

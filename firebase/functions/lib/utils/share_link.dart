@@ -10,6 +10,7 @@ import 'package:data_models/events/event.dart';
 import 'package:data_models/community/community.dart';
 import 'package:timezone/standalone.dart' as tz;
 import 'template_utils.dart';
+import 'package:data_models/utils/generated_image.dart';
 
 class ShareLink implements CloudFunction {
   @override
@@ -42,7 +43,8 @@ class ShareLink implements CloudFunction {
     final appPath = _getAppPath(Uri.parse(requestedUri));
 
     var title = '$_appName - Real Deliberations, Meaningful Communities';
-    var image = functions.config.get('app.banner_image_url') as String;
+    final defaultImage = functions.config.get('app.banner_image_url') as String;
+    var image = defaultImage;
     var description =
         'Deliberations with real people in real time, for any interest.';
 
@@ -114,11 +116,8 @@ class ShareLink implements CloudFunction {
       image = community.bannerImageUrl ?? '';
     }
 
-    if (isLinkedIn &&
-        image.contains('picsum.photos') &&
-        image.contains('.webp')) {
-      image = image.replaceAll('.webp', '');
-    }
+    image = externalImageUrl(image);
+    if (image.isEmpty) image = defaultImage;
 
     print(image);
     return '''
