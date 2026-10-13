@@ -339,7 +339,7 @@ SHARE_LINK_URL=<value>         # URL prefix for share links, e.g. https://<app-u
 **Agora** (voice/video SDK):
 AGORA_APP_ID=<value>           # For client-side connections to Agora.
 
-**Cloudinary** (for media uploads):
+**Cloudinary** (for media uploads; optional). Leave `CLOUDINARY_CLOUD_NAME` unset to turn off all image and video uploads, including profile pictures. The upload controls are then hidden and the Cloudinary upload widget is never loaded, so no data is sent to Cloudinary from the browser:
 
 ```bash
 CLOUDINARY_IMAGE_PRESET=<value>
@@ -418,6 +418,14 @@ Also configure Mux webhooks in the Mux dashboard to POST to your deployed `MuxWe
 ### Cloudinary
 
 Cloudinary is used for media uploads. Configuration is done entirely via `client/.env` (see step 9). No source files need to be edited.
+
+To keep browsers away from Cloudinary entirely, also set
+`app.cloudinary_enabled="false"` in the Functions runtime config. `ServeIndex`
+then drops every Cloudinary host from the Content-Security-Policy, so the
+browser refuses any request to Cloudinary. Images uploaded earlier keep their
+Cloudinary URLs and stop displaying. Point `LOGO_URL` and `app.banner_image_url`
+(used in emails) at images you host yourself, because their example values,
+like the Open Graph image in `client/web/index.html`, are served from Cloudinary.
 
 ### Stripe
 
