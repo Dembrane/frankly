@@ -338,6 +338,7 @@ SHARE_LINK_URL=<value>         # URL prefix for share links, e.g. https://<app-u
 
 **Agora** (voice/video SDK):
 AGORA_APP_ID=<value>           # For client-side connections to Agora.
+AGORA_AREA=GLOBAL              # Optional. EU keeps media and signalling on Agora's European servers.
 
 **Cloudinary** (for media uploads):
 
