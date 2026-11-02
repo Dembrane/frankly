@@ -25,6 +25,7 @@ import 'package:data_models/community/membership.dart';
 import 'package:data_models/community/membership_request.dart';
 import 'package:provider/provider.dart';
 import 'package:quiver/iterables.dart';
+import 'package:data_models/utils/generated_image.dart';
 
 extension StringExtension on String {
   String capitalize() {
@@ -72,7 +73,7 @@ class MembershipDataSource extends DataTableSource {
               children: [
                 CircleAvatar(
                   backgroundImage: NetworkImage(
-                    userInfo?.imageUrl ?? '',
+                    replaceLegacyPlaceholderUrl(userInfo?.imageUrl ?? ''),
                   ),
                 ),
                 SizedBox(width: 8),
@@ -144,7 +145,9 @@ class MembershipRequestDataSource extends DataTableSource {
                 CircleAvatar(
                   backgroundImage: userInfo?.imageUrl != null &&
                           userInfo!.imageUrl!.isNotEmpty == true
-                      ? NetworkImage(userInfo.imageUrl!)
+                      ? NetworkImage(
+                          replaceLegacyPlaceholderUrl(userInfo.imageUrl!),
+                        )
                       : null,
                   child: userInfo?.imageUrl != null &&
                           userInfo?.imageUrl!.isNotEmpty == true

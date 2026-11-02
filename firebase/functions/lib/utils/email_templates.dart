@@ -13,6 +13,7 @@ import 'package:data_models/events/event_message.dart';
 import 'package:data_models/community/community.dart';
 import 'package:data_models/templates/template.dart';
 import 'package:timezone/standalone.dart' as tz;
+import 'package:data_models/utils/generated_image.dart';
 
 final privacyPolicyUrl =
     functions.config.get('app.privacy_policy_url') as String;
@@ -325,7 +326,7 @@ String generateEmailEventInfo({
             <div class="event-box">
                 <table>
                     <tr>
-                        <td><img src="$eventImageSanitized" width="52"/></td>
+                        <td>${eventImageSanitized.isEmpty ? '' : '<img src="$eventImageSanitized" width="52"/>'}</td>
                         <td class="event-info-cell">
                             <div class="event-info">
                                 <div class="event-name">$eventTitleSanitized</div>
@@ -563,7 +564,8 @@ String makeNewEventMessageBody({
 
   String makeEventHtml(Template template, Event event) {
     const htmlEscape = HtmlEscape();
-    final image = htmlEscape.convert(event.image ?? template.image ?? '');
+    final image =
+        htmlEscape.convert(externalImageUrl(event.image ?? template.image));
     final title = htmlEscape.convert(event.title ?? template.title ?? '');
 
     final scheduledTimeUtc = event.scheduledTime?.toUtc();
@@ -587,7 +589,7 @@ String makeNewEventMessageBody({
       <div class="event-box">
           <table>
               <tr>
-                  <td><img src="$image" width="52"/></td>
+                  <td>${image.isEmpty ? '' : '<img src="$image" width="52"/>'}</td>
                   <td class="event-info-cell">
                       <div class="event-info">
                           <div class="event-name">$title</div>
@@ -1200,8 +1202,8 @@ String makeEventDigestBody({
 
   String makeEventHtml(EventWithTemplate info) {
     const htmlEscape = HtmlEscape();
-    final image =
-        htmlEscape.convert(info.event.image ?? info.template.image ?? '');
+    final image = htmlEscape
+        .convert(externalImageUrl(info.event.image ?? info.template.image));
     final title =
         htmlEscape.convert(info.event.title ?? info.template.title ?? '');
     final url =
@@ -1228,7 +1230,7 @@ String makeEventDigestBody({
       <div class="event-box">
           <table>
               <tr>
-                  <td><img src="$image" width="52"/></td>
+                  <td>${image.isEmpty ? '' : '<img src="$image" width="52"/>'}</td>
                   <td class="event-info-cell">
                       <div class="event-info">
                           <div class="event-name">$title</div>
@@ -1404,10 +1406,7 @@ String generateEventEndedContent({
   final settingsUrl =
       '$linkPrefix/settings?initialSection=notifications&communityId=${community.id}';
   final communityUrl = '$linkPrefix/space/${event.communityId}';
-  var bannerImgUrl = community.profileImageUrl ?? '';
-  if (bannerImgUrl.contains('picsum')) {
-    bannerImgUrl = bannerImgUrl.replaceAll('.webp', '.jpg');
-  }
+  final bannerImgUrl = externalImageUrl(community.profileImageUrl);
 
   final imageHtml = isNullOrEmpty(bannerImgUrl)
       ? ''

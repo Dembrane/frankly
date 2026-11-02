@@ -6,6 +6,7 @@ import 'package:data_models/user/public_user_info.dart';
 import 'package:data_models/utils/utils.dart';
 
 import '../../../../core/utils/firestore_utils.dart';
+import 'package:data_models/utils/generated_image.dart';
 
 class FirestoreUserService {
   static const String publicUser = 'publicUser';
@@ -27,7 +28,7 @@ class FirestoreUserService {
         id: userId,
         agoraId: uidToInt(userId),
         displayName: 'User-${userId.substring(0, 4)}',
-        imageUrl: 'https://picsum.photos/seed/$userId/160',
+        imageUrl: generatedImageUrl(userId),
       );
     }
   }

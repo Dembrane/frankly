@@ -4,6 +4,7 @@ import 'package:client/config/environment.dart';
 import 'package:client/styles/app_asset.dart';
 import 'package:client/styles/styles.dart';
 import 'package:universal_html/js.dart' as universal_js;
+import 'package:data_models/utils/generated_image.dart';
 
 class ProxiedImage extends StatelessWidget {
   final String? url;
@@ -25,9 +26,9 @@ class ProxiedImage extends StatelessWidget {
   });
 
   String get processedUrl {
-    var processedUrl = url ?? '';
-    if (processedUrl.contains('picsum.photos')) {
-      processedUrl = processedUrl.replaceAll('.webp', '');
+    var processedUrl = replaceLegacyPlaceholderUrl(url ?? '');
+    if (processedUrl.startsWith('data:')) {
+      return processedUrl;
     }
 
     if (processedUrl.startsWith('http://') &&

@@ -5,6 +5,7 @@ import 'package:data_models/community/membership.dart';
 import 'package:test/test.dart';
 import 'package:functions/community/create_community.dart';
 import 'package:data_models/cloud_functions/requests.dart';
+import 'package:data_models/utils/generated_image.dart';
 import 'package:functions/utils/infra/firestore_utils.dart';
 
 import '../util/function_test_fixture.dart';
@@ -94,7 +95,7 @@ void main() {
       communitySettings: const CommunitySettings(),
       eventSettings: EventSettings.defaultSettings,
       createdDate: createdCommunity.createdDate,
-      profileImageUrl: 'https://picsum.photos/seed/$communityId-profile/512',
+      profileImageUrl: generatedImageUrl('$communityId-profile'),
       bannerImageUrl: '',
       displayIds: [communityId],
     );

@@ -11,6 +11,7 @@ import 'package:data_models/community/community.dart';
 import 'package:data_models/community/membership.dart';
 import 'package:data_models/admin/partner_agreement.dart';
 import 'package:data_models/utils/utils.dart';
+import 'package:data_models/utils/generated_image.dart';
 
 class CreateCommunity extends OnCallMethod<CreateCommunityRequest> {
   CreateCommunity()
@@ -73,7 +74,7 @@ class CreateCommunity extends OnCallMethod<CreateCommunityRequest> {
       id: communityDocRef.documentID,
       creatorId: userId,
       profileImageUrl: community.profileImageUrl ??
-          'https://picsum.photos/seed/${communityDocRef.documentID}-profile/512',
+          generatedImageUrl('${communityDocRef.documentID}-profile'),
       bannerImageUrl: community.bannerImageUrl ?? '',
       communitySettings: const CommunitySettings(),
       eventSettings: EventSettings.defaultSettings,

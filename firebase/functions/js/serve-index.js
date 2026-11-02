@@ -57,8 +57,7 @@ function buildCsp(nonce) {
             ` https://api.linkpreview.net https://*.stripe.com` +
             ` https://frankly.org https://fonts.gstatic.com https://www.gstatic.com`,
         `img-src 'self' data: blob:` +
-            ` https://res.cloudinary.com https://*.googleusercontent.com` +
-            ` https://picsum.photos https://fastly.picsum.photos`,
+            ` https://res.cloudinary.com https://*.googleusercontent.com`,
         `media-src 'self' blob: https://res.cloudinary.com https://*.mux.com`,
         `frame-src 'self'` +
             ` https://player.vimeo.com https://*.stripe.com https://*.firebaseapp.com`,

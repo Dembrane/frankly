@@ -1,4 +1,6 @@
 import 'dart:math';
 
+import 'package:data_models/utils/generated_image.dart';
+
 String generateRandomImageUrl({int? seed, int? resolution}) =>
-    'https://picsum.photos/seed/${seed ?? Random().nextInt(1000)}/${resolution ?? 512}';
+    generatedImageUrl('${seed ?? Random().nextInt(1000)}');
